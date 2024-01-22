@@ -9,13 +9,16 @@ export default function LoginPage() {
   const { userInfo, setUserInfo } = useContext(UserContext);
   async function login(e) {
     e.preventDefault();
-    const response = await fetch("http://localhost:8000/api/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "https://blogbackend1-tugp.onrender.com/api/login",
+      {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     if (response.ok) {
       response.json().then((userInfo) => {
         setUserInfo(userInfo);

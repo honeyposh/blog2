@@ -6,7 +6,7 @@ export default function Header() {
   const { setUserInfo, userInfo } = useContext(UserContext);
   useEffect(() => {
     const token = localStorage.getItem("Authtoken");
-    fetch("http://localhost:8000/api/getme", {
+    fetch("https://blogbackend1-tugp.onrender.com/api/getme", {
       // credentials: "include",
       headers: {
         Authorization: `${token}`,

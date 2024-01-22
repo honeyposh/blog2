@@ -16,14 +16,17 @@ export default function CreatePost() {
     e.preventDefault();
     // console.log(files);
     const token = localStorage.getItem("Authtoken");
-    const response = await fetch("http://localhost:8000/api/createpost", {
-      method: "POST",
-      body: data,
-      // credentials: "include",
-      headers: {
-        Authorization: `${token}`,
-      },
-    });
+    const response = await fetch(
+      "https://blogbackend1-tugp.onrender.com/api/createpost",
+      {
+        method: "POST",
+        body: data,
+        // credentials: "include",
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
+    );
     if (response.ok) {
       setRedirect(true);
     }

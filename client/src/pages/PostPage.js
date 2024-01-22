@@ -8,20 +8,25 @@ export default function PostPage() {
   const [redirect, setRedirect] = useState(false);
   const { id } = useParams();
   useEffect(() => {
-    fetch(`http://localhost:8000/api/getpost/${id}`).then((response) => {
-      response.json().then((postInfo) => {
-        setPost(postInfo.post);
-      });
-    });
+    fetch(`https://blogbackend1-tugp.onrender.com/api/getpost/${id}`).then(
+      (response) => {
+        response.json().then((postInfo) => {
+          setPost(postInfo.post);
+        });
+      }
+    );
   }, []);
   async function deletePost() {
     const token = localStorage.getItem("Authtoken");
-    const response = await fetch(`http://localhost:8000/api/deletepost/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `${token}`,
-      },
-    });
+    const response = await fetch(
+      `https://blogbackend1-tugp.onrender.com/api/deletepost/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
+    );
     setRedirect(true);
   }
   if (redirect) {
@@ -55,7 +60,10 @@ export default function PostPage() {
         </div>
       )}
       <div className="image">
-        <img src={`http://localhost:8000/${post.imageUrl}`} alt="" />
+        <img
+          src={`https://blogbackend1-tugp.onrender.com/${post.imageUrl}`}
+          alt=""
+        />
       </div>
       <div
         className="content"

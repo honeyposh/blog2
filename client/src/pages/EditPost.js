@@ -9,12 +9,14 @@ export default function EditPost() {
   const [files, setFiles] = useState("");
   const [redirect, setRedirect] = useState(false);
   useEffect(() => {
-    fetch("http://localhost:8000/api/getpost/" + id).then((response) => {
-      response.json().then((postInfo) => {
-        setTitle(postInfo.post.title);
-        setContent(postInfo.post.content);
-      });
-    });
+    fetch("https://blogbackend1-tugp.onrender.com/api/getpost/" + id).then(
+      (response) => {
+        response.json().then((postInfo) => {
+          setTitle(postInfo.post.title);
+          setContent(postInfo.post.content);
+        });
+      }
+    );
   }, []);
   async function updatePost(e) {
     e.preventDefault();
@@ -25,7 +27,7 @@ export default function EditPost() {
       data.set("file", files?.[0]);
     }
     const token = localStorage.getItem("Authtoken");
-    await fetch("http://localhost:8000/api/updatepost/" + id, {
+    await fetch("https://blogbackend1-tugp.onrender.com/api/updatepost/" + id, {
       method: "PUT",
       body: data,
       headers: {
