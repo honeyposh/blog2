@@ -29,7 +29,7 @@ exports.getPosts = async (req, res, next) => {
   try {
     const posts = await Post.find()
       .sort({ createdAt: -1 })
-      .populate("postedBy likes", "name");
+      .populate("postedBy likes comments.postedBy", "username");
     res.status(200).json({ success: true, posts });
   } catch (error) {
     next(error);
@@ -40,7 +40,7 @@ exports.getPost = async (req, res, next) => {
   try {
     const post = await Post.findById(postId).populate(
       "postedBy comments.postedBy",
-      "name"
+      "username"
     );
     if (!post) {
       return next(new errorResponse("post not found", 404));
@@ -75,7 +75,7 @@ exports.addComment = async (req, res, next) => {
     }
     const post = await Post.findById(postId).populate(
       "comments.postedBy",
-      "name email"
+      "username email"
     );
     res.status(200).json({ success: true, post });
   } catch (error) {
@@ -148,7 +148,10 @@ exports.addLike = async (req, res, next) => {
       { $addToSet: { likes: req.user._id } },
       { new: true }
     );
-    const post = await Post.findById(postLike._id).populate("likes", "name");
+    const post = await Post.findById(postLike._id).populate(
+      "likes",
+      "username"
+    );
     res.status(200).json({ success: true, post });
   } catch (error) {
     next(error);
@@ -162,7 +165,10 @@ exports.removeLike = async (req, res, next) => {
       { $pull: { likes: req.user._id } },
       { new: true }
     );
-    const post = await Post.findById(postLike._id).populate("likes", "name");
+    const post = await Post.findById(postLike._id).populate(
+      "likes",
+      "username"
+    );
     res.status(200).json({ success: true, post });
   } catch (error) {
     next(error);

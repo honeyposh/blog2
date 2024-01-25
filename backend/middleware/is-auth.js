@@ -3,7 +3,7 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 exports.isAuthorized = async (req, res, next) => {
   // const token = req.cookies.token;
-  const token = req.headers.authorization;
+  const token = req.headers.authorization || req.cookies.token;
   // console.log(token);
   if (!token) {
     return next(new errorResponse("you must login", 401));

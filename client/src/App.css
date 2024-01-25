@@ -151,3 +151,21 @@ div.post-page button.btn {
   color: #fff;
   background-color: #333;
 }
+.delete-comment-btn {
+  /* display: inline; */
+  align-items: center;
+  width: 200px;
+  padding: 15px 30px;
+  border-radius: 5px;
+  margin-left: 400px;
+  color: black;
+  background-color: white;
+}
+/* .CommentInfo {
+  display: flex;
+  background-color: red;
+} */
+/* .SingleComment {
+  background-color: yellow;
+  display: flex;
+} */
