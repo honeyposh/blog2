@@ -29,7 +29,7 @@ exports.getPosts = async (req, res, next) => {
   try {
     const posts = await Post.find()
       .sort({ createdAt: -1 })
-      .populate("postedBy likes comments.postedBy", "username");
+      .populate("postedBy likes comments.postedBy", "username name");
     res.status(200).json({ success: true, posts });
   } catch (error) {
     next(error);
@@ -40,7 +40,7 @@ exports.getPost = async (req, res, next) => {
   try {
     const post = await Post.findById(postId).populate(
       "postedBy comments.postedBy",
-      "username"
+      "username name"
     );
     if (!post) {
       return next(new errorResponse("post not found", 404));
