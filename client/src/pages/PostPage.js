@@ -5,41 +5,45 @@ import { format } from "date-fns";
 import { UserContext } from "../UserContext";
 export default function PostPage() {
   const { userInfo } = useContext(UserContext);
-  const [post, setPost] = useState(null);
+  const [post, setPost] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [comment, setComment] = useState("");
   const { id } = useParams();
-  console.log(post);
-  console.log(userInfo);
+  // console.log(post);
+  // console.log(userInfo);
   // console.log(userInfo.username);
   useEffect(() => {
     fetch(`https://blogbackend1-tugp.onrender.com/api/getpost/${id}`).then(
       (response) => {
+        console.log(response);
         response.json().then((postInfo) => {
           setPost(postInfo.post);
         });
       }
     );
-  }, []);
-
+  }, [post]);
+  console.log(post);
   // console.log(userInfo?.id === post.comments.postedBy?._id);
   async function handleSubmit(e) {
-    e.preventDefault(e);
+    e.preventDefault();
     const token = localStorage.getItem("Authtoken");
-    const updatedPost = await fetch(`http://localhost:8000/api/comment/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-      body: JSON.stringify({ comment }),
-    }).then((response) => {
+    const updatedPost = await fetch(
+      `https://blogbackend1-tugp.onrender.com/api/comment/${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify({ comment }),
+      }
+    ).then((response) => {
       response.json();
     });
     setPost(updatedPost);
     setComment("");
-    setRedirect(true);
   }
+
   async function deletePost() {
     const token = localStorage.getItem("Authtoken");
     const response = await fetch(
@@ -56,15 +60,19 @@ export default function PostPage() {
   if (redirect) {
     return <Navigate to={"/"} />;
   }
-  if (!post) return "";
-  // console.log(userInfo?._id === post.postedBy?._id);
+  // async function deleteComment() {
+  //   await fetch(
+  //     `https://blogbackend1-tugp.onrender.com/api/posts/:postId/comments/:commentId`
+  //   );
+  // }
+  if (!post) return <div></div>;
 
   return (
     <div className="post-page">
       <h1>{post.title}</h1>
       <time>{formatISO9075(new Date(post.createdAt))}</time>
       <div className="author">PostedBy:{post.postedBy.name}</div>
-      {userInfo?.username === post.postedBy?.username && (
+      {userInfo?._id === post.postedBy?._id && (
         <div className="edit-row">
           <Link to={`/edit/${post._id}`} className="edit-btn">
             Edit this post
@@ -75,10 +83,7 @@ export default function PostPage() {
         </div>
       )}
       <div className="image">
-        <img
-          src={`https://blogbackend1-tugp.onrender.com/${post.imageUrl}`}
-          alt=""
-        />
+        <img src={post.imageUrl.url} alt="" />
       </div>
       <div
         className="content"
@@ -97,33 +102,28 @@ export default function PostPage() {
                   {comment.postedBy.username} :{" "}
                 </span>{" "}
                 <span className="CommentDate">
-                  {format(new Date(comment.created), "MMM d yyyy")}
+                  <time>{formatISO9075(comment.created)}</time>
                 </span>{" "}
               </div>{" "}
               <span>{comment.text}</span>
-              {userInfo?.username === comment.postedBy?.username && (
-                <button className="delete-comment-btn">Delete</button>
+              {userInfo?._id === comment.postedBy?._id && (
+                <button className="delete-comment-btn">Remove Comment</button>
               )}
               <hr />
             </div>
           ))}
-        {userInfo?._id && (
-          <div className="Comments">
-            <form onSubmit={handleSubmit}>
-              <input
-                required="true"
-                onChange={(e) => {
-                  setComment(e.target.value);
-                }}
-                type="text"
-                placeholder="write a comment"
-                value={comment}
-              />
-              <button className="btn">Add Comment</button>
-            </form>
-          </div>
-        )}
       </div>
+      {userInfo?._id && (
+        <form onSubmit={handleSubmit}>
+          <input
+            onChange={(ev) => setComment(ev.target.value)}
+            type="text"
+            placeholder="write a comment"
+            value={comment}
+          />
+          <button className="btn">Add Comment</button>
+        </form>
+      )}
     </div>
   );
 }

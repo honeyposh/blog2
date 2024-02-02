@@ -2,14 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { isAuthorized, isAdmin } = require("../middleware/is-auth");
 const postController = require("../controllers/postController");
-const { uploadMiddleware } = require("../middleware/uploadMiddleware");
-router.post(
-  "/createpost",
-  isAuthorized,
-  isAdmin,
-  uploadMiddleware.single("file"),
-  postController.createPost
-);
+router.post("/createpost", isAuthorized, isAdmin, postController.createPost);
 router.get("/getposts", postController.getPosts);
 router.get("/getpost/:postId", postController.getPost);
 router.delete(
@@ -19,12 +12,7 @@ router.delete(
   postController.deletePost
 );
 router.post("/comment/:postId", isAuthorized, postController.addComment);
-router.put(
-  "/updatepost/:postId",
-  isAuthorized,
-  uploadMiddleware.single("file"),
-  postController.updatePost
-);
+router.put("/updatepost/:postId", isAuthorized, postController.updatePost);
 router.put("/addlike/:postId", isAuthorized, postController.addLike);
 router.put("/removelike/:postId", isAuthorized, postController.removeLike);
 router.delete(

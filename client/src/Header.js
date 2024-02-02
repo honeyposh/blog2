@@ -17,7 +17,7 @@ export default function Header() {
         setUserInfo(userInfo.user);
       });
     });
-  }, []);
+  }, [userInfo]);
 
   async function logout() {
     localStorage.setItem("Authtoken", "");

@@ -8,6 +8,7 @@ const authRoute = require("./routes/authRoute");
 const postRoute = require("./routes/postRoute");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
+const fileupload = require("express-fileupload");
 const app = express();
 require("dotenv").config();
 app.use(morgan("dev"));
@@ -27,8 +28,11 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use("/uploads", express.static(__dirname + "/uploads")),
-  app.use("/api", authRoute);
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+// app.use("/uploads", express.static(__dirname + "/uploads")),
+app.use(fileupload({ useTempFiles: true }));
+app.use("/api", authRoute);
 app.use("/api", postRoute);
 app.use(errorHandler);
 const port = process.env.PORT || 8000;

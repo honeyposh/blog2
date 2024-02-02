@@ -11,6 +11,6 @@ export default function IndexPage() {
         });
       }
     );
-  }, []);
+  }, [posts]);
   return <>{posts.length > 0 && posts.map((post) => <Post {...post} />)}</>;
 }
