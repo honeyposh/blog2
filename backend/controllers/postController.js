@@ -172,7 +172,7 @@ exports.updatePost = async (req, res, next) => {
   try {
     //current product
     const currentPost = await Post.findById(req.params.postId);
-
+    console.log(currentPost);
     //build the data object
     const data = {
       title: req.body.title,
@@ -187,21 +187,21 @@ exports.updatePost = async (req, res, next) => {
       }
 
       const newImage = await cloudinary.uploader.upload(req.body.imageUrl, {
-        folder: "products",
+        folder: "blog",
         width: 1000,
         crop: "scale",
       });
-
-      data.image = {
+      // console.log(newImage);
+      data.imageUrl = {
         public_id: newImage.public_id,
         url: newImage.secure_url,
       };
     }
 
-    const postUpdate = await Product.findOneAndUpdate(req.paramspostId, data, {
+    const postUpdate = await Post.findByIdAndUpdate(req.params.postId, data, {
       new: true,
     });
-
+    // console.log(postUpdate);
     res.status(200).json({
       success: true,
       postUpdate,

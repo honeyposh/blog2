@@ -6,8 +6,9 @@ export default function EditPost() {
   const { id } = useParams();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [imageUrl, setImageUrl] = useState();
   const [redirect, setRedirect] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
   const handleImage = (e) => {
     const file = e.target.files[0];
     setFileToBase(file);
@@ -23,13 +24,15 @@ export default function EditPost() {
     console.log(imageUrl);
   };
   useEffect(() => {
-    fetch("http://localhost:8000/api/api/getpost/" + id).then((response) => {
-      response.json().then((postInfo) => {
-        setTitle(postInfo.post.title);
-        setContent(postInfo.post.content);
-        setImageUrl(postInfo.post.imageUrl);
-      });
-    });
+    fetch("https://blogbackend1-tugp.onrender.com/api/getpost/" + id).then(
+      (response) => {
+        response.json().then((postInfo) => {
+          setTitle(postInfo.post.title);
+          setContent(postInfo.post.content);
+          setImagePreview(postInfo.post.imageUrl.url);
+        });
+      }
+    );
   }, []);
   async function updatePost(e) {
     e.preventDefault();
