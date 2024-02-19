@@ -12,12 +12,12 @@ const fileupload = require("express-fileupload");
 const app = express();
 require("dotenv").config();
 app.use(morgan("dev"));
-app.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:3000"],
-  })
-);
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: ["http://localhost:3000"],
+//   })
+// );
 //     methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
 //     allowedHeaders: [
 //       "Access-Control-Allow-Origin",
