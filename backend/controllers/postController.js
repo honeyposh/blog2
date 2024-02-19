@@ -115,7 +115,7 @@ exports.deleteComment = async (req, res, next) => {
   try {
     const post = await Post.findById(postId);
     const comment = post.comments.id(commentId);
-    console.log(post.comments);
+    console.log(post);
     if (!post) {
       return next(new errorResponse("post not found", 404));
     }
@@ -137,49 +137,14 @@ exports.deleteComment = async (req, res, next) => {
     next(error);
   }
 };
-// exports.updatePost = async (req, res, next) => {
-//   let newPath = null;
-//   if (req.file) {
-//     const { originalname, path } = req.file;
-//     const parts = originalname.split(".");
-//     const ext = parts[parts.length - 1];
-//     newPath = path + "." + ext;
-//     fs.renameSync(path, newPath);
-//   }
-//   const updatedTitle = req.body.title;
-//   const updatedContent = req.body.content;
-//   try {
-//     const post = await Post.findById(req.params.postId);
-//     if (post.postedBy.toString() !== req.user._id.toString()) {
-//       return next(
-//         new errorResponse("you are not authorized to update this post", 403)
-//       );
-//     }
-//     post.title = updatedTitle;
-//     post.content = updatedContent;
-//     if (newPath) {
-//       post.imageUrl = newPath;
-//     } else {
-//       post.imageUrl = post.imageUrl;
-//     }
-//     const updatedPost = await post.save();
-//     res.status(200).json({ sucess: true, updatedPost });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 exports.updatePost = async (req, res, next) => {
   try {
-    //current product
     const currentPost = await Post.findById(req.params.postId);
     console.log(currentPost);
-    //build the data object
     const data = {
       title: req.body.title,
       content: req.body.content,
     };
-
-    //modify image conditionnally
     if (req.body.imageUrl !== "") {
       const ImgId = currentPost.imageUrl.public_id;
       if (ImgId) {

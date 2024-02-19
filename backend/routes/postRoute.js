@@ -20,4 +20,5 @@ router.delete(
   isAuthorized,
   postController.deleteComment
 );
+
 module.exports = router;

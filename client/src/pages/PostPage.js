@@ -1,29 +1,26 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { formatISO9075 } from "date-fns";
-import { format } from "date-fns";
+// import { format } from "date-fns";
 import { UserContext } from "../UserContext";
+
 export default function PostPage() {
   const { userInfo } = useContext(UserContext);
   const [post, setPost] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [comment, setComment] = useState("");
   const { id } = useParams();
-  // console.log(post);
-  // console.log(userInfo);
-  // console.log(userInfo.username);
+  // console.log(id);
+  // console.log(commentId);
   useEffect(() => {
     fetch(`https://blogbackend1-tugp.onrender.com/api/getpost/${id}`).then(
       (response) => {
-        console.log(response);
         response.json().then((postInfo) => {
           setPost(postInfo.post);
         });
       }
     );
   }, [post]);
-  console.log(post);
-  // console.log(userInfo?.id === post.comments.postedBy?._id);
   async function handleSubmit(e) {
     e.preventDefault();
     const token = localStorage.getItem("Authtoken");
@@ -60,11 +57,19 @@ export default function PostPage() {
   if (redirect) {
     return <Navigate to={"/"} />;
   }
-  // async function deleteComment() {
-  //   await fetch(
-  //     `https://blogbackend1-tugp.onrender.com/api/posts/:postId/comments/:commentId`
-  //   );
-  // }
+  async function removeComment(comment) {
+    const token = localStorage.getItem("Authtoken");
+    const response = await fetch(
+      `https://blogbackend1-tugp.onrender.com/api/posts/${id}/comments/${comment}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
+    );
+    console.log(response);
+  }
   if (!post) return <div></div>;
 
   return (
@@ -99,15 +104,18 @@ export default function PostPage() {
               <div className="CommentInfo">
                 {" "}
                 <span className="user">
-                  {comment.postedBy.username} :{" "}
-                </span>{" "}
-                <span className="CommentDate">
-                  <time>{formatISO9075(comment.created)}</time>
+                  {comment.postedBy.username} : {formatISO9075(comment.created)}
                 </span>{" "}
               </div>{" "}
               <span>{comment.text}</span>
               {userInfo?._id === comment.postedBy?._id && (
-                <button className="delete-comment-btn">Remove Comment</button>
+                <button
+                  className="delete-comment-btn"
+                  onClick={() => removeComment(comment._id)}
+                >
+                  {" "}
+                  Remove Comment
+                </button>
               )}
               <hr />
             </div>
