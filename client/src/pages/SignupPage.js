@@ -1,11 +1,12 @@
 import { useState } from "react";
-// import { useAsyncError } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [redirect, setRedirect] = useState(false);
   async function register(e) {
     e.preventDefault();
     const response = await fetch(
@@ -18,10 +19,13 @@ export default function SignupPage() {
     );
     if (response.status === 201) {
       alert("Registration succesful!!!");
+      setRedirect(true);
     } else {
       alert("Registration failed");
     }
-    // console.log(response);
+  }
+  if (redirect) {
+    return <Navigate to={"/"} />;
   }
   return (
     <form className="signup" onSubmit={register}>

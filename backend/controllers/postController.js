@@ -115,7 +115,7 @@ exports.deleteComment = async (req, res, next) => {
   try {
     const post = await Post.findById(postId);
     const comment = post.comments.id(commentId);
-    console.log(post);
+    // console.log(post);
     if (!post) {
       return next(new errorResponse("post not found", 404));
     }
